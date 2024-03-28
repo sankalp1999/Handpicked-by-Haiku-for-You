@@ -63,7 +63,7 @@
 
         .top-links {
         position: absolute;
-        bottom: 10px;
+        top: 10px;
         left: 10px;
         }
         .top-links a {
@@ -86,28 +86,28 @@
         <p class="para">Mention the type of recommendations e.g "Movies", "Restaurants in Singapore" in the rightmost box </p>
 
         <form method="POST" onsubmit="return validateForm()">
-            <div class="row">
-                <div class="col-md-4">
+            <div class="row mb-3">
+                <div class="col-sm-12 col-md-4">
                     <input type="text" class="form-control" id="movie1" name="movie1" placeholder="e.g Dune (Book)" autocomplete="off" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-12 col-md-4">
                     <input type="text" class="form-control" id="movie2" name="movie2" placeholder="e.g Arrival" autocomplete="off" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-12 col-md-4">
                     <input type="text" class="form-control" id="movie3" name="movie3" placeholder="e.g Shape of you by Ed Sheeran" autocomplete="off" required>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row mb-3">
+                <div class="col-sm-12 col-md-6">
                     <input type="text" class="form-control" id="rectype" name="rectype" placeholder="Recommendation Type" autocomplete="off">
                 </div>
             </div>
-            <div class="text-center">
+            <div class="text-center mt-3">
                 <button type="submit" class="btn btn-primary btn-lg">Get Recommendations</button>
             </div>
         </form>
         {% if mermaid_code %}
-        <div class="mermaid">
+        <div class="mermaid img-fluid">
             {{ mermaid_code }}
         </div>
         {% endif %}
