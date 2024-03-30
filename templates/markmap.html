@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate It!</title>
+    <link rel="icon" type="image/png" href="static/umaru.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@latest"></script>
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .examples {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .examples p {
+            margin-bottom: 10px;
+        }
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            margin-bottom: 30px;
+        }
+        .search-bar input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 30px;
+            background-color: #f1f1f1;
+            font-size: 18px;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .search-bar input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .top-links {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .top-links a {
+            margin-right: 10px;
+        }
+        .markmap {
+            width: 100%;
+            height: calc(100vh - 350px);
+            margin-top: 30px;
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #343a40;
+            text-align: center;
+        }
+        .top-right-links {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .top-right-links a {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-links">
+            <a href="https://www.buymeacoffee.com/dejavucoder" target="_blank">
+              <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174">
+            </a>
+            <a href="https://twitter.com/dejavucoder" target="_blank">
+              <i class="fab fa-twitter"></i> Twitter
+            </a>
+          </div>
+        <div class="top-right-links">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i></i> Back
+            </a>
+        </div>  
+        <h1>Handpicked by Haiku for You</h1>
+        <div class="examples">
+            <p>Generate a markmap diagram for easy visualization based on queries like</p>
+            <p>Recommend me movies based on combinations of Blade Runner 2049, Chamber of Reflection song, and Arrival</p>
+            <p>Mention all the research papers that led to invention of the Transformers deep learning architecture</p>
+            <p>List books suggested by Naval and Sam Altman</p>
+        </div>  
+        <form method="POST" onsubmit="return validateForm()">
+            <div class="search-bar">
+                <input type="text" class="form-control" id="search" name="search" placeholder="Your query..." maxlength="1000" autocomplete="on" required>
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary btn-lg">Generate It!</button>
+            </div>
+            <!-- Moved the loading-icon div just below the button -->
+            <div class="loading-icon" style="display:none; margin-top: 20px; text-align: center;">
+                <!-- Simple CSS-based spinner -->
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </form>
+        <div id="markmap-container" class="markmap">
+            <script type="text/template">
+                {% if markmap_code %}
+                    {{ markmap_code }}
+                {% endif %}
+            </script>
+        </div>
+    </div>
+  
+    <script>
+        function validateForm() {
+    var search = document.getElementById("search").value;
+    if (search) {
+        // Show loading icon
+        document.querySelector('.loading-icon').style.display = 'block';
+    }
+    return true; // Ensure the form is submitted
+}
+
+    </script>
+</body>
+</html>

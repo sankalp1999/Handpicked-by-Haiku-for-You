@@ -51,6 +51,7 @@
         .mermaid {
             text-align: center;
             margin-top: 30px;
+            min-height: 500px;
         }
         .para {
             text-align: center;
@@ -69,6 +70,15 @@
         .top-links a {
         margin-right: 10px;
         }
+
+        .top-right-links {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .top-right-links a {
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -81,25 +91,31 @@
               <i class="fab fa-twitter"></i> Twitter
             </a>
           </div>
+        <div class="top-right-links">
+            <a href="{{ url_for('markmap') }}" class="btn btn-secondary">
+                <i class="fas fa-project-diagram"></i> Markmap
+            </a>
+        </div>  
+          
         <h1>Handpicked by Haiku for You</h1>
-        <p class="para">Enter your favorite things like movies, music, tv show, movie, TV shows, music artist, food items... </p>
-        <p class="para">Mention the type of recommendations e.g "Movies", "Restaurants in Singapore" in the rightmost box </p>
+        <p class="para">Enter your favorite things like movies, books, songs and get personalised recommendations. </p>
+        <p class="para">Mention what you want e.g "Movies", "Restaurants in Singapore" in the rightmost box </p>
 
         <form method="POST" onsubmit="return validateForm()">
             <div class="row mb-3">
                 <div class="col-sm-12 col-md-4">
-                    <input type="text" class="form-control" id="movie1" name="movie1" placeholder="e.g Dune (Book)" autocomplete="off" required>
+                    <input type="text" class="form-control" id="movie1" name="movie1" placeholder="e.g Dune (Book)" autocomplete="on" required>
                 </div>
                 <div class="col-sm-12 col-md-4">
-                    <input type="text" class="form-control" id="movie2" name="movie2" placeholder="e.g Arrival" autocomplete="off" required>
+                    <input type="text" class="form-control" id="movie2" name="movie2" placeholder="e.g Arrival" autocomplete="on" required>
                 </div>
                 <div class="col-sm-12 col-md-4">
-                    <input type="text" class="form-control" id="movie3" name="movie3" placeholder="e.g Shape of you by Ed Sheeran" autocomplete="off" required>
+                    <input type="text" class="form-control" id="movie3" name="movie3" placeholder="e.g Shape of you (Song)" autocomplete="on" required>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-12 col-md-6">
-                    <input type="text" class="form-control" id="rectype" name="rectype" placeholder="Recommendation Type" autocomplete="off">
+                    <input type="text" class="form-control" id="rectype" name="rectype" placeholder="What are you looking for?" autocomplete="on">
                 </div>
             </div>
             <div class="text-center mt-3">
@@ -112,8 +128,9 @@
         </div>
         {% endif %}
     </div>
+    
     <script>
-        mermaid.initialize({ startOnLoad: true });
+        mermaid.initialize({ startOnLoad: true})
         function validateForm() {
             var movie1 = document.getElementById("movie1").value;
             var movie2 = document.getElementById("movie2").value;

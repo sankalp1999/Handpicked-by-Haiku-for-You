@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+
 SYSTEM_PROMPT = '''
 Given your three favorite items (could be anything from movies, TV shows, books, anime or music artists to cuisine, city, country name, brand name):
 1. {$ITEM1}
@@ -180,6 +181,211 @@ Q:::combRec; S:::combRec;
 
 '''
 
+
+SYSTEM_PROMPT_FOR_MARKMAP = ''' Here's the updated prompt with examples 1 and 4 swapped:
+
+```
+
+Given a user's  query $INPUT , generate a visually appealing markmap diagram to represent the relevant information or recommendations. The query could be related to various topics such as movies, books, music, gaming, learning, or any other domain.
+
+Create the markmap diagram with the following elements:
+
+- Use the main topic or theme from the user's query as the central node, represented as a top-level heading (#).
+
+- Create additional nodes representing subtopics, steps, or recommendations based on the user's query, using nested headings (##, ###, etc.) to represent the hierarchy.
+
+  - For recommendations (e.g., movies, books, music): genres, themes, directors, authors, or similar items
+
+  - For how-to queries: steps, stages, or components involved in the process
+
+  - For topic overviews: subtopics, key points, or related concepts
+
+- Make proper branches and connections wherever possible:
+
+  - If the user provides multiple examples (e.g., movies, books), create recommendations based on combinations of two or more examples.
+
+  - Use nested headings to represent the connections and hierarchy between the examples and recommendations.
+
+- Ensure that the information provided is accurate and avoid giving misinformation.
+
+- Use bullet points (-) to list specific examples or descriptions under each subtopic or recommendation.
+
+- Format the text inside the nodes to be concise and readable.
+
+- Organize the layout of the markmap based on the content:
+
+  - Main topic at the top
+
+  - Subtopics or recommendations nested under the main topic
+
+  - Combined nodes positioned appropriately based on their connections
+
+- Use meaningful and concise phrases for each node.
+
+- Try to be concise in explanations and do not write when you are unsure
+
+Output the complete markmap diagram inside <markmap> tags.
+
+Examples:
+
+1. User query: "Recommend movies like Nightcrawler, Taxi Driver, and Perfect Blue"
+
+<markmap>
+
+# Intense Psychological Thriller Recommendations
+
+## Based on Nightcrawler and Taxi Driver
+
+- The King of Comedy (1982)
+
+- Unsettling portrayal of a deranged fan
+
+## Based on Nightcrawler and Perfect Blue
+
+- Black Swan (2010)
+
+- Descent into madness and obsession
+
+## Based on Taxi Driver and Perfect Blue
+
+- Bringing Out the Dead (1999)
+
+- Haunting exploration of a paramedic's psyche
+
+## Based on all three movies
+
+- American Psycho (2000)
+
+- Satirical look at a disturbed mind
+
+- Joker (2019)
+
+- Gritty origin story of a iconic villain
+
+</markmap>
+
+2. User query: "How to learn web development"
+
+<markmap>
+
+# Web Development
+
+## HTML and CSS
+
+- Structure and Styling
+
+### Responsive Design
+
+- Mobile-friendly layouts
+
+## JavaScript
+
+- Interactivity and Functionality
+
+### Front-end Frameworks
+
+- React, Angular, Vue.js
+
+### Back-end Development
+
+- Node.js, Express.js
+
+### State Management
+
+- Redux, MobX
+
+### Databases
+
+- MongoDB, MySQL
+
+## Full-stack Development
+
+- MERN, MEAN stack
+
+</markmap>
+
+3. User query: "History of the Souls games"
+
+<markmap>
+
+# Souls Games
+
+## Demon's Souls
+
+- 2009
+
+## Dark Souls
+
+- 2011
+
+### Dark Souls II
+
+- 2014
+
+### Bloodborne
+
+- 2015
+
+## Dark Souls III
+
+- 2016
+
+### Sekiro: Shadows Die Twice
+
+- 2019
+
+### Elden Ring
+
+- 2022
+
+</markmap>
+
+4. User query: "Top cyberpunk movies like Blade Runner"
+
+<markmap>
+
+# Blade Runner
+
+## Neuromancer
+
+- 1984 novel
+
+## Ghost in the Shell
+
+- 1995
+
+## The Matrix
+
+- 1999
+
+### Johnny Mnemonic
+
+- 1995
+
+### Akira
+
+- 1988
+
+### Minority Report
+
+- 2002
+
+### Tron
+
+- 1982
+
+## Altered Carbon
+
+- 2018 TV series
+
+</markmap>
+
+Remember to analyze the user's query carefully and generate a markmap that accurately represents the relevant information or recommendations. Use the examples provided as a guide for structuring the markmap, and make proper branches and connections based on combinations of the user's input wherever possible.
+
+```
+'''
+
+
 print(API_KEY)
 
 def replace_parentheses(string):
@@ -231,7 +437,7 @@ def index():
                 "messages": [
                 {"role": "system", "content":  f"{SYSTEM_PROMPT}"},
                 
-                {"role": "user", "content": f"my favourite movies are {movie1}, {movie2} and {movie3}. I want recommendations for {rectype} \n"}
+                {"role": "user", "content": f"my favourite items are 1. {movie1}, 2.{movie2} and 3.{movie3}. I want recommendations for {rectype} \n"}
                 ]
             })
             )
@@ -249,6 +455,36 @@ def index():
         return render_template('index.html', mermaid_code=mermaid_code)
 
     return render_template('index.html')
+
+@app.route('/markmap', methods=['GET', 'POST'])
+def markmap():
+    if request.method == 'POST':
+        print("HELLO")
+        user_input = request.form['search']
+
+        response = requests.post(
+            url="https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                "HTTP-Referer": "picked-by-haiku-for-you.onrender.com",
+                "X-Title": "Handpicked by Haiku",
+            },
+            data=json.dumps({
+                "model": "anthropic/claude-3-haiku",
+                "messages": [
+                    {"role": "system", "content": f"{SYSTEM_PROMPT_FOR_MARKMAP}"},
+                    {"role": "user", "content": f"This is what user wants: {user_input}. Try to understand what I want and my mood."}
+                ]
+            })
+        )
+
+        response_json = json.loads(response.content)
+        markmap_code = response_json['choices'][0]['message']['content']
+        markmap_code = markmap_code.split("<markmap>")[1].split("</markmap>")[0].strip()
+
+        return render_template('markmap.html', markmap_code=markmap_code, has_markmap=bool(markmap_code))
+
+    return render_template('markmap.html')
 
 if __name__ == '__main__':
     app.run()
