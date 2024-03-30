@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+YOUR_APP_URL = "https://handpicked-by-haiku-for-you.onrender.com/"
 
 SYSTEM_PROMPT = '''
 Given your three favorite items (could be anything from movies, TV shows, books, anime or music artists to cuisine, city, country name, brand name):
@@ -182,10 +183,7 @@ Q:::combRec; S:::combRec;
 '''
 
 
-SYSTEM_PROMPT_FOR_MARKMAP = ''' Here's the updated prompt with examples 1 and 4 swapped:
-
-```
-
+SYSTEM_PROMPT_FOR_MARKMAP = ''' 
 Given a user's  query $INPUT , generate a visually appealing markmap diagram to represent the relevant information or recommendations. The query could be related to various topics such as movies, books, music, gaming, learning, or any other domain.
 
 Create the markmap diagram with the following elements:
@@ -193,6 +191,7 @@ Create the markmap diagram with the following elements:
 - Use the main topic or theme from the user's query as the central node, represented as a top-level heading (#).
 
 - Create additional nodes representing subtopics, steps, or recommendations based on the user's query, using nested headings (##, ###, etc.) to represent the hierarchy.
+  - If you use same heading again, they end up in same line. This can be useful at times for showing chronology.
 
   - For recommendations (e.g., movies, books, music): genres, themes, directors, authors, or similar items
 
@@ -202,7 +201,7 @@ Create the markmap diagram with the following elements:
 
 - Make proper branches and connections wherever possible:
 
-  - If the user provides multiple examples (e.g., movies, books), create recommendations based on combinations of two or more examples.
+  - If the user provides multiple examples (e.g., movies, books), create recommendations based on combinations of two or more examples if connection is there or if they ask.
 
   - Use nested headings to represent the connections and hierarchy between the examples and recommendations.
 
@@ -224,7 +223,8 @@ Create the markmap diagram with the following elements:
 
 - Try to be concise in explanations and do not write when you are unsure
 
-Output the complete markmap diagram inside <markmap> tags.
+Output the complete markmap diagram inside <markmap> tags. Below are examples to take inspiration from and the structure is not strictly to be followed. 
+Use your knowledge to form the structure.
 
 Examples:
 
@@ -264,83 +264,8 @@ Examples:
 
 </markmap>
 
-2. User query: "How to learn web development"
 
-<markmap>
-
-# Web Development
-
-## HTML and CSS
-
-- Structure and Styling
-
-### Responsive Design
-
-- Mobile-friendly layouts
-
-## JavaScript
-
-- Interactivity and Functionality
-
-### Front-end Frameworks
-
-- React, Angular, Vue.js
-
-### Back-end Development
-
-- Node.js, Express.js
-
-### State Management
-
-- Redux, MobX
-
-### Databases
-
-- MongoDB, MySQL
-
-## Full-stack Development
-
-- MERN, MEAN stack
-
-</markmap>
-
-3. User query: "History of the Souls games"
-
-<markmap>
-
-# Souls Games
-
-## Demon's Souls
-
-- 2009
-
-## Dark Souls
-
-- 2011
-
-### Dark Souls II
-
-- 2014
-
-### Bloodborne
-
-- 2015
-
-## Dark Souls III
-
-- 2016
-
-### Sekiro: Shadows Die Twice
-
-- 2019
-
-### Elden Ring
-
-- 2022
-
-</markmap>
-
-4. User query: "Top cyberpunk movies like Blade Runner"
+2. User query: "Top cyberpunk movies like Blade Runner"
 
 <markmap>
 
@@ -381,8 +306,6 @@ Examples:
 </markmap>
 
 Remember to analyze the user's query carefully and generate a markmap that accurately represents the relevant information or recommendations. Use the examples provided as a guide for structuring the markmap, and make proper branches and connections based on combinations of the user's input wherever possible.
-
-```
 '''
 
 
@@ -429,7 +352,7 @@ def index():
             url="https://openrouter.ai/api/v1/chat/completions",
             headers={
                 "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-                "HTTP-Referer": "picked-by-haiku-for-you.onrender.com", # Optional, for including your app on openrouter.ai rankings.
+                "HTTP-Referer": "https://handpicked-by-haiku-for-you.onrender.com/", # Optional, for including your app on openrouter.ai rankings.
                 "X-Title": "Handpicked by Haiku", # Optional. Shows in rankings on openrouter.ai.
             },
             data=json.dumps({
@@ -466,7 +389,7 @@ def markmap():
             url="https://openrouter.ai/api/v1/chat/completions",
             headers={
                 "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-                "HTTP-Referer": "picked-by-haiku-for-you.onrender.com",
+                "HTTP-Referer": "https://handpicked-by-haiku-for-you.onrender.com/",
                 "X-Title": "Handpicked by Haiku",
             },
             data=json.dumps({
