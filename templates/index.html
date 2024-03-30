@@ -104,22 +104,29 @@
         <form method="POST" onsubmit="return validateForm()">
             <div class="row mb-3">
                 <div class="col-sm-12 col-md-4">
-                    <input type="text" class="form-control" id="movie1" name="movie1" placeholder="e.g Dune (Book)" autocomplete="on" required>
+                    <input type="text" class="form-control" id="movie1" name="movie1" placeholder="e.g Dune (Book)" maxlength="100" autocomplete="on" required>
                 </div>
                 <div class="col-sm-12 col-md-4">
-                    <input type="text" class="form-control" id="movie2" name="movie2" placeholder="e.g Arrival" autocomplete="on" required>
+                    <input type="text" class="form-control" id="movie2" name="movie2" placeholder="e.g Arrival" maxlength="100" autocomplete="on" required>
                 </div>
                 <div class="col-sm-12 col-md-4">
-                    <input type="text" class="form-control" id="movie3" name="movie3" placeholder="e.g Shape of you (Song)" autocomplete="on" required>
+                    <input type="text" class="form-control" id="movie3" name="movie3" placeholder="e.g Shape of you (Song)" maxlength="100" autocomplete="on" required>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-12 col-md-6">
-                    <input type="text" class="form-control" id="rectype" name="rectype" placeholder="What are you looking for?" autocomplete="on">
+                    <input type="text" class="form-control" id="rectype" name="rectype" placeholder="What are you looking for?" maxlength="500" autocomplete="on">
                 </div>
             </div>
             <div class="text-center mt-3">
                 <button type="submit" class="btn btn-primary btn-lg">Get Recommendations</button>
+            </div>
+            <!-- Moved the loading-icon div just below the button -->
+            <div class="loading-icon" style="display:none; margin-top: 20px; text-align: center;">
+                <!-- Simple CSS-based spinner -->
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
         </form>
         {% if mermaid_code %}
@@ -130,13 +137,23 @@
     </div>
     
     <script>
-        mermaid.initialize({ startOnLoad: true})
+        mermaid.initialize({ startOnLoad: true });
+        
         function validateForm() {
             var movie1 = document.getElementById("movie1").value;
             var movie2 = document.getElementById("movie2").value;
             var movie3 = document.getElementById("movie3").value;
-            return movie1 && movie2 && movie3;
+            if (movie1 && movie2 && movie3) {
+                // Show loading icon
+                document.querySelector('.loading-icon').style.display = 'block';
+                return true; // Proceed with form submission
+            } else {
+                // Optionally alert the user that all fields are required
+                alert("Please fill in all movie fields.");
+                return false; // Prevent form submission
+            }
         }
-    </script>
+        </script>
+        
 </body>
 </html>
