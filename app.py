@@ -1,35 +1,12 @@
 from flask import Flask, render_template, request
 import anthropic
 import os
+import requests, json
 app = Flask(__name__)
 
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 API_KEY = os.environ.get("ANTHROPIC_API_KEY")
-print(API_KEY)
-
-def replace_parentheses(string):
-    return string.replace('(', '_').replace(')', '_')
-
-# system="Given your three favorite movies:\n\n1. {$MOVIE1}\n\n2. {$MOVIE2}\n\n3. {$MOVIE3}\n\nCreate a Mermaid flowchart diagram with the following elements:\n\n- Use your 3 favorite movies as the initial nodes in the flowchart\n\n- Create additional nodes representing movie recommendations based on connections and similarities between your favorite movies, such as:\n\n-- Themes and genres\n\n-- Directors and actors\n\n-- Style, tone, and cinematography\n\n- Draw arrows connecting the initial movie nodes to the relevant recommendation nodes\n\n- Label each arrow briefly describing the connection (e.g., \"Philosophical sci-fi\", \"Tarantino-esque dialogue\")\n\n- Inside each recommendation node, include the titles of 1-3 specific movies you would recommend based on that connection\n\n- You can create recommendation nodes based on combinations of your initial favorite movies if you notice overarching connections between them\n\n- Use proper Mermaid syntax, with your favorite movies and recommendations represented as nodes\n\n- mention movie names as movie_name year\n\n- make graph aesthetic if you can\n\n- check syntax again\n\nOutput the complete Mermaid flowchart diagram inside triple backticks like this (note it is an example):\n\n```mermaid\n\ngraph TD\n\nA((Favorite Movies))\n\nA --> B{$MOVIE1}\n\nA --> C{$MOVIE2}\n\nA --> D{$MOVIE3}\n\nB --> E[Recommendation1]\n\nE --> E1[Movie Title]\n\nE --> E2[Movie Title]\n\nB --> F[Recommendation2]\n\nF --> F1[Movie Title]\n\nF --> F2[Movie Title]\n\nC --> G[Recommendation1]\n\nG --> G1[Movie Title]\n\nG --> G2[Movie Title]\n\nC --> H[Recommendation2]\n\nH --> H1[Movie Title]\n\nH --> H2[Movie Title]\n\nD --> I[Recommendation1]\n\nI --> I1[Movie Title]\n\nI --> I2[Movie Title]\n\nD --> J[Recommendation2]\n\nJ --> J1[Movie Title]\n\nJ --> J2[Movie Title]\n\nB --> K{Combined Recommendation}\n\nC --> K\n\nK --> K1[Movie Title]\n\nK --> K2[Movie Title]\n\nC --> L{Combined Recommendation}\n\nD --> L\n\nL --> L1[Movie Title]\n\nL --> L2[Movie Title]",
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        
-        movie1 = replace_parentheses(request.form['movie1'])
-        movie2 = replace_parentheses(request.form['movie2'])
-        movie3 = replace_parentheses(request.form['movie3'])
-        rectype = ''
-        if 'rectype' in request.form:
-          rectype = replace_parentheses(request.form['rectype'])
-
-        client = anthropic.Anthropic(api_key=API_KEY)
-
-        message = client.messages.create(
-            model="claude-3-haiku-20240307",
-            # model="claude-3-opus-20240229",
-            max_tokens=1000,
-            temperature=0,
-            
-            system = '''
+SYSTEM_PROMPT = '''
 Given your three favorite items (could be anything from movies, TV shows, books, anime or music artists to cuisine, city, country name, brand name):
 1. {$ITEM1}
 2. {$ITEM2}
@@ -39,14 +16,15 @@ And the optional type of recommendations you want :
 4. {$RECTYPE}
 
 Create a visually appealing Mermaid flowchart diagram with the following elements:
-- Use your 3 favorite items as the initial nodes in the flowchart, represented as stadium-shaped nodes (\[\]).
+- Use your 3 favorite items as the initial nodes in the flowchart, represented as stadium-shaped nodes ([]).
 - Create additional nodes representing recommendations based on connections and similarities between your favorite items, such as:
   - Themes, genres, and styles
   - Directors, actors, authors, and artists
   - Tone, atmosphere, and creative elements
 - Represent recommendation nodes as subroutine-shaped nodes {{}}.
-- Use cylindrical nodes \[()\] for recommendations that combine elements from multiple favorite items.
+- Use cylindrical nodes [()] for recommendations that combine elements from multiple favorite items.
 - Draw curved arrows (===>) connecting the initial nodes to the relevant recommendation nodes.
+- Make sure you recommend items you are sure about, do not give misinformation.
 - Label each arrow briefly describing the connection (e.g., "Philosophical sci-fi", "Tarantino-esque dialogue", "Dystopian themes", "Jazz influences").
 - Inside each recommendation node, include the titles of 1-3 specific items you would recommend based on that connection.
 - The recommendation node should necessarily contain a title and not random descriptions.
@@ -65,10 +43,10 @@ Create a visually appealing Mermaid flowchart diagram with the following element
 - Organize and explain sections of the flowchart using comments %%.
 - Double-check the Mermaid syntax for errors and parenthesis in title name.
 
-Output the complete Mermaid flowchart diagram inside triple backticks using below example and make sure not include parentheses and any kind of quotes in the titles:
+Output the complete Mermaid flowchart diagram inside triple backticks using below example and make sure not include parentheses and any kind of quotes in the titles. Also no explanation is required.:
 
 Example 1 (Movie recommendations):
-\`\`\`mermaid
+```mermaid
 graph LR
 %% Favorite songs
 A([Shape of You<br>Ed Sheeran]) ====> B([Show Me How<br>Men I Trust])
@@ -91,10 +69,10 @@ classDef favItem fill:#f9d, stroke:#333, stroke-width:2px;
 classDef mainRec fill:#bfb, stroke:#333, stroke-width:2px;
 A:::favItem; B:::favItem; C:::favItem;
 D:::mainRec; F:::mainRec; H:::mainRec;
-\`\`\`
+```
 
 Example 2 (Book recommendations):
-\`\`\`mermaid
+```mermaid
 graph LR
 %% Favorite songs
 A([Shape of You<br>Ed Sheeran]) ====> B([Show Me How<br>Men I Trust])
@@ -117,6 +95,7 @@ classDef favItem fill:#f9d, stroke:#333, stroke-width:2px;
 classDef mainRec fill:#bfb, stroke:#333, stroke-width:2px;
 A:::favItem; B:::favItem; C:::favItem;
 D:::mainRec; F:::mainRec; H:::mainRec;
+```
 
 Example 3 (Food recommendations):
 ```mermaid
@@ -197,23 +176,73 @@ D:::mainRec; G:::mainRec; I:::mainRec; K:::mainRec; M:::mainRec; O:::mainRec;
 Q:::combRec; S:::combRec;
 ```
 
-\`\`\`
+```
 
-''',
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": f"my favourite movies are {movie1}, {movie2} and {movie3}. I want recommendations for {rectype} \n"
-                        }
-                    ]
-                }
-            ]
-        )
+'''
 
-        mermaid_code = message.content[0].text
+print(API_KEY)
+
+def replace_parentheses(string):
+    return string.replace('(', '_').replace(')', '_')
+
+# system="Given your three favorite movies:\n\n1. {$MOVIE1}\n\n2. {$MOVIE2}\n\n3. {$MOVIE3}\n\nCreate a Mermaid flowchart diagram with the following elements:\n\n- Use your 3 favorite movies as the initial nodes in the flowchart\n\n- Create additional nodes representing movie recommendations based on connections and similarities between your favorite movies, such as:\n\n-- Themes and genres\n\n-- Directors and actors\n\n-- Style, tone, and cinematography\n\n- Draw arrows connecting the initial movie nodes to the relevant recommendation nodes\n\n- Label each arrow briefly describing the connection (e.g., \"Philosophical sci-fi\", \"Tarantino-esque dialogue\")\n\n- Inside each recommendation node, include the titles of 1-3 specific movies you would recommend based on that connection\n\n- You can create recommendation nodes based on combinations of your initial favorite movies if you notice overarching connections between them\n\n- Use proper Mermaid syntax, with your favorite movies and recommendations represented as nodes\n\n- mention movie names as movie_name year\n\n- make graph aesthetic if you can\n\n- check syntax again\n\nOutput the complete Mermaid flowchart diagram inside triple backticks like this (note it is an example):\n\n```mermaid\n\ngraph TD\n\nA((Favorite Movies))\n\nA --> B{$MOVIE1}\n\nA --> C{$MOVIE2}\n\nA --> D{$MOVIE3}\n\nB --> E[Recommendation1]\n\nE --> E1[Movie Title]\n\nE --> E2[Movie Title]\n\nB --> F[Recommendation2]\n\nF --> F1[Movie Title]\n\nF --> F2[Movie Title]\n\nC --> G[Recommendation1]\n\nG --> G1[Movie Title]\n\nG --> G2[Movie Title]\n\nC --> H[Recommendation2]\n\nH --> H1[Movie Title]\n\nH --> H2[Movie Title]\n\nD --> I[Recommendation1]\n\nI --> I1[Movie Title]\n\nI --> I2[Movie Title]\n\nD --> J[Recommendation2]\n\nJ --> J1[Movie Title]\n\nJ --> J2[Movie Title]\n\nB --> K{Combined Recommendation}\n\nC --> K\n\nK --> K1[Movie Title]\n\nK --> K2[Movie Title]\n\nC --> L{Combined Recommendation}\n\nD --> L\n\nL --> L1[Movie Title]\n\nL --> L2[Movie Title]",
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        
+        movie1 = replace_parentheses(request.form['movie1'])
+        movie2 = replace_parentheses(request.form['movie2'])
+        movie3 = replace_parentheses(request.form['movie3'])
+        rectype = ''
+        if 'rectype' in request.form:
+          rectype = replace_parentheses(request.form['rectype'])
+
+        # client = anthropic.Anthropic(api_key=API_KEY)
+
+        # message = client.messages.create(
+        #     model="claude-3-haiku-20240307",
+        #     # model="claude-3-opus-20240229",
+        #     max_tokens=1000,
+        #     temperature=0,
+            
+        #     system = SYSTEM_PROMPT,
+        #     messages=[
+        #         {
+        #             "role": "user",
+        #             "content": [
+        #                 {
+        #                     "type": "text",
+        #                     "text": f"my favourite movies are {movie1}, {movie2} and {movie3}. I want recommendations for {rectype} \n"
+        #                 }
+        #             ]
+        #         }
+        #     ]
+        # )
+
+        response = requests.post(
+            url="https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                "HTTP-Referer": "picked-by-haiku-for-you.onrender.com", # Optional, for including your app on openrouter.ai rankings.
+                "X-Title": "Handpicked by Haiku", # Optional. Shows in rankings on openrouter.ai.
+            },
+            data=json.dumps({
+                "model": "anthropic/claude-3-haiku", # Optional
+                "messages": [
+                {"role": "system", "content":  f"{SYSTEM_PROMPT}"},
+                
+                {"role": "user", "content": f"my favourite movies are {movie1}, {movie2} and {movie3}. I want recommendations for {rectype} \n"}
+                ]
+            })
+            )
+
+        # print(mermaid_code)
+        # mermaid_code = mermaid_code.split("```mermaid")[1].split("```")[0].strip()
+        # print(mermaid_code)
+
+
+        response_json = json.loads(response.content)
+        mermaid_code = response_json['choices'][0]['message']['content']
         print(mermaid_code)
         mermaid_code = mermaid_code.split("```mermaid")[1].split("```")[0].strip()
         # print(mermaid_code)
