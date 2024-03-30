@@ -207,7 +207,7 @@ Create the markmap diagram with the following elements:
 
 - Ensure that the information provided is accurate and avoid giving misinformation.
 
-- Use bullet points (-) to list specific examples or descriptions under each subtopic or recommendation.
+- Use bullet points (-) to list specific examples or descriptions under each subtopic or recommendation. Can give links if user wants in bullet points.
 
 - Format the text inside the nodes to be concise and readable.
 
