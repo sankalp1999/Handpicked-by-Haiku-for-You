@@ -62,6 +62,12 @@
         .top-right-links a {
             margin-left: 10px;
         }
+        .download-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -99,6 +105,11 @@
                 </div>
             </div>
         </form>
+        {% if markmap_code %}
+        <div class="text-center mt-4 mb-4">
+            <button id="downloadButton" class="btn btn-success btn-lg fs-4 px-4 py-2">Download</button>
+        </div>
+        {% endif %}
         <div id="markmap-container" class="markmap">
             <script type="text/template">
                 {% if markmap_code %}
@@ -116,6 +127,18 @@
             }
             return true;
         }
+    </script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        document.getElementById("downloadButton").addEventListener("click", function() {
+            var markmap = document.getElementById("markmap-container");
+            html2canvas(markmap, { scale: 2 }).then(function(canvas) {
+                var link = document.createElement('a');
+                link.href = canvas.toDataURL("image/png");
+                link.download = "markmap.png";
+                link.click();
+            });
+        });
     </script>
 </body>
 </html>
