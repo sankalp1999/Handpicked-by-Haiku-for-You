@@ -207,7 +207,9 @@ Create the markmap diagram with the following elements:
 
 - Ensure that the information provided is accurate and avoid giving misinformation.
 
-- Use bullet points (-) to list specific examples or descriptions under each subtopic or recommendation. Can give links if user wants in bullet points.
+- Use bullet points (-) to list specific examples or descriptions under each subtopic or recommendation.
+
+- If asked for links, they are only supported with bullet points like - [title](link here)
 
 - Format the text inside the nodes to be concise and readable.
 
@@ -404,6 +406,7 @@ def markmap():
         response_json = json.loads(response.content)
         markmap_code = response_json['choices'][0]['message']['content']
         markmap_code = markmap_code.split("<markmap>")[1].split("</markmap>")[0].strip()
+        print("markmap_code", markmap_code)
 
         return render_template('markmap.html', markmap_code=markmap_code, has_markmap=bool(markmap_code))
 

@@ -136,6 +136,17 @@
             {{ mermaid_code }}
         </div>
         {% endif %}
+        {% if request.method == 'POST' %}
+        <form method="POST">
+            <input type="hidden" name="movie1" value="{{ request.form['movie1'] }}">
+            <input type="hidden" name="movie2" value="{{ request.form['movie2'] }}">
+            <input type="hidden" name="movie3" value="{{ request.form['movie3'] }}">
+            <input type="hidden" name="rectype" value="{{ request.form['rectype'] }}">
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-secondary btn-lg">Retry</button>
+            </div>
+        </form>
+        {% endif %}
     </div>
     
     <script>

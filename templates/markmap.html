@@ -31,11 +31,10 @@
             background-color: #f1f1f1;
             font-size: 20px;
             color: #333;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
         }
         .search-bar input[type="text"]:focus {
             outline: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
         .top-links {
             position: absolute;
@@ -82,14 +81,14 @@
         </div>  
         <h1>Handpicked by Haiku for You</h1>
         <div class="examples">
-            <p>Generate a markmap diagram for easy visualization based on queries like</p>
-            <p>Recommend me movies based on combinations of Blade Runner 2049, Chamber of Reflection song, and Arrival</p>
+            <p>Get markmap powered visualizations for your queries. Refer below queries for examples.</p>
+            <p>Recommend movies based on combination of Blade Runner 2049, Chamber of Reflection song, and Arrival.</p>
             <p>Mention all the research papers that led to invention of the Transformers deep learning architecture</p>
-            <p>List books suggested by Naval and Sam Altman</p>
+            <p>Top Sam Altman blog posts with links if possible</p>
         </div>  
         <form method="POST" onsubmit="return validateForm()">
             <div class="search-bar">
-                <input type="text" class="form-control" id="search" name="search" placeholder="Your query..." maxlength="1000" autocomplete="on" required>
+                <input type="text" class="form-control" id="search" name="search" placeholder="Visualize diagram tonite queen?" maxlength="1000" autocomplete="on" required>
             </div>
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-primary btn-lg fs-4 px-4 py-2">Generate It!</button>
