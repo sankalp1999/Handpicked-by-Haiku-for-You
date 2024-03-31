@@ -172,14 +172,22 @@
         }
 
         document.getElementById("downloadButton").addEventListener("click", function() {
-                var mermaidElement = document.querySelector(".mermaid");
-                html2canvas(mermaidElement, { scale: 2 }).then(function(canvas) {
-                    var link = document.createElement('a');
-                    link.href = canvas.toDataURL("image/png");
-                    link.download = "mermaid-diagram.png";
-                    link.click();
-                });
-            });
+        var mermaidElement = document.querySelector(".mermaid");
+        html2canvas(mermaidElement, {
+            scale: 2,
+            onclone: function(clonedDoc) {
+                var clonedMermaid = clonedDoc.querySelector('.mermaid');
+                var computedHeight = window.getComputedStyle(mermaidElement).height;
+                clonedMermaid.style.height = computedHeight;
+            }
+        }).then(function(canvas) {
+            var link = document.createElement('a');
+            link.href = canvas.toDataURL("image/png");
+            link.download = "mermaid-diagram.png";
+            link.click();
+        });
+    });
+            
         </script>
         
 </body>
