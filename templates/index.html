@@ -132,6 +132,9 @@
             </div>
         </form>
         {% if mermaid_code %}
+        <div class="text-center mt-3">
+            <button id="downloadButton" class="btn btn-success btn-lg">Download</button>
+        </div>
         <div class="mermaid img-fluid">
             {{ mermaid_code }}
         </div>
@@ -148,7 +151,8 @@
         </form>
         {% endif %}
     </div>
-    
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
         
@@ -166,6 +170,16 @@
                 return false; // Prevent form submission
             }
         }
+
+        document.getElementById("downloadButton").addEventListener("click", function() {
+                var mermaidElement = document.querySelector(".mermaid");
+                html2canvas(mermaidElement, { scale: 2 }).then(function(canvas) {
+                    var link = document.createElement('a');
+                    link.href = canvas.toDataURL("image/png");
+                    link.download = "mermaid-diagram.png";
+                    link.click();
+                });
+            });
         </script>
         
 </body>
