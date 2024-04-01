@@ -9,7 +9,7 @@ API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 YOUR_APP_URL = "https://handpicked-by-haiku-for-you.onrender.com/"
 
 SYSTEM_PROMPT = '''
-Given your three favorite items (could be anything from movies, TV shows, books, anime or music artists to cuisine, city, country name, brand name):
+You are a mermaid diagram expert. Given three favorite items (could be anything from movies, TV shows, books, anime or music artists to cuisine, city, country name, brand name):
 1. {$ITEM1}
 2. {$ITEM2}
 3. {$ITEM3}
@@ -47,6 +47,7 @@ Create a visually appealing Mermaid flowchart diagram with the following element
 
 Output the complete Mermaid flowchart diagram inside triple backticks using below example and make sure not include parentheses and any kind of quotes in the titles. Also no explanation is required.:
 
+<example>
 Example 1 (Movie recommendations):
 ```mermaid
 graph LR
@@ -72,7 +73,9 @@ classDef mainRec fill:#bfb, stroke:#333, stroke-width:2px;
 A:::favItem; B:::favItem; C:::favItem;
 D:::mainRec; F:::mainRec; H:::mainRec;
 ```
+</example>
 
+<example>
 Example 2 (Book recommendations):
 ```mermaid
 graph LR
@@ -98,7 +101,9 @@ classDef mainRec fill:#bfb, stroke:#333, stroke-width:2px;
 A:::favItem; B:::favItem; C:::favItem;
 D:::mainRec; F:::mainRec; H:::mainRec;
 ```
+</example>
 
+<example>
 Example 3 (Food recommendations):
 ```mermaid
 graph TD
@@ -138,8 +143,10 @@ A:::favItem; B:::favItem; C:::favItem;
 D:::mainRec; G:::mainRec; I:::mainRec; L:::mainRec; N:::mainRec; Q:::mainRec;
 S:::combRec; U:::combRec; W:::combRec;
 ```
+</example>
 
 
+<example>
 Example 4 (Title name contained parenthesis replaced by underscore)
 ```mermaid
 graph LR
@@ -177,14 +184,14 @@ A:::favItem; B:::favItem; C:::favItem;
 D:::mainRec; G:::mainRec; I:::mainRec; K:::mainRec; M:::mainRec; O:::mainRec; 
 Q:::combRec; S:::combRec;
 ```
-
+</example>
 ```
-
 '''
 
 
 SYSTEM_PROMPT_FOR_MARKMAP = ''' 
 Given a user's  query $INPUT , generate a visually appealing markmap diagram to represent the relevant information or recommendations. The query could be related to various topics such as movies, books, music, gaming, learning, or any other domain.
+Even if the question is general like "who is the top anime girl", please try to make the diagram.
 
 Create the markmap diagram with the following elements:
 
@@ -225,12 +232,12 @@ Create the markmap diagram with the following elements:
 
 - Try to be concise in explanations and do not write when you are unsure
 
-Output the complete markmap diagram inside <markmap> tags. Below are examples to take inspiration from and the structure is not strictly to be followed. 
-Use your knowledge to form the structure.
+Output the complete markmap diagram inside <markmap> tags. Below are examples to take inspiration from, please try to be diverse. Use your knowledge to form the structure.
 
 Examples:
 
-1. User query: "Recommend movies like Nightcrawler, Taxi Driver, and Perfect Blue"
+<example>
+User query: "Recommend movies like Nightcrawler, Taxi Driver, and Perfect Blue"
 
 <markmap>
 
@@ -265,9 +272,10 @@ Examples:
 - Gritty origin story of a iconic villain
 
 </markmap>
+</example>
 
-
-2. User query: "Top cyberpunk movies like Blade Runner"
+<example>
+User query: "Top cyberpunk movies like Blade Runner"
 
 <markmap>
 
@@ -306,6 +314,7 @@ Examples:
 - 2018 TV series
 
 </markmap>
+</example>
 
 Remember to analyze the user's query carefully and generate a markmap that accurately represents the relevant information or recommendations. Use the examples provided as a guide for structuring the markmap, and make proper branches and connections based on combinations of the user's input wherever possible.
 '''
