@@ -24,7 +24,7 @@ The diagrams are rendered using [mermaid](https://mermaid.js.org/) and [markmap]
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/Handpicked-by-Haiku-for-You.git
+   git clone https://github.com/sankalp1999/Handpicked-by-Haiku-for-You.git
    cd Handpicked-by-Haiku-for-You
    ```
 
