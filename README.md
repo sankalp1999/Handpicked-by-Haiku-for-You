@@ -3,11 +3,11 @@
 You can try out Handpicked by Haiku for You at [https://handpicked-by-haiku-for-you.onrender.com/](https://handpicked-by-haiku-for-you.onrender.com/).
 
 
-Handpicked by Haiku for You is a 2 page flask app that generates personalized recommendations and visualizations based on user input. It leverages the knowledge base of Claude Haiku to create engaging and informative content tailored to the user's preferences.
+Handpicked by Haiku for You is a flask app that generates personalized recommendations and visualizations based on user input. It leverages the knowledge base of Claude Haiku to 
+provide the recommendations based on the user's taste and then generate structured text output that can be rendered as diagrams.
 
-I structure the outputs by providing with few shot examples in the system prompt. 
 
-I made the prompt mainly via chatting with Claude Opus and using the [metaprompt notebook](https://colab.research.google.com/drive/1SoAajN8CBYTl79VyTwxtxncfCWlHlyy9).
+The system prompt was made mainly via chatting with Claude Opus and using the [metaprompt notebook](https://colab.research.google.com/drive/1SoAajN8CBYTl79VyTwxtxncfCWlHlyy9).
 
 The diagrams are rendered using [mermaid](https://mermaid.js.org/) and [markmap](https://markmap.js.org/)
 
