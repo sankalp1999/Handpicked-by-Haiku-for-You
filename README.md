@@ -11,6 +11,15 @@ The system prompt was made mainly via chatting with Claude Opus and using the [m
 
 The diagrams are rendered using [mermaid](https://mermaid.js.org/) and [markmap](https://markmap.js.org/)
 
+See `app.py` for both the system prompts. (They are ugly)
+
+See the files in `templates/` for the rendering code
+
+Mermaid uses just a CDN to render. The trick for markmap is [here](https://markmap.js.org/api/modules/markmap_autoloader.html)
+
+Markmap's benefit is very less syntax validation is required.
+
+
 ## Features
 
 - **Personalized Recommendations**: Enter your favorite items (e.g., movies, books, songs) and get personalized recommendations in the form of a visually appealing Mermaid flowchart diagram
