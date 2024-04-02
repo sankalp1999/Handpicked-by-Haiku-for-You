@@ -1,18 +1,24 @@
 # Handpicked by Haiku for You
 
-Handpicked by Haiku for You is a web application that generates personalized recommendations and visualizations based on user input. It leverages the power of AI to create engaging and informative content tailored to the user's preferences.
+You can try out Handpicked by Haiku for You at [https://handpicked-by-haiku-for-you.onrender.com/](https://handpicked-by-haiku-for-you.onrender.com/).
+
+
+Handpicked by Haiku for You is a 2 page flask app that generates personalized recommendations and visualizations based on user input. It leverages the knowledge base of Claude Haiku to create engaging and informative content tailored to the user's preferences.
+
+I structure the outputs by providing with few shot examples in the system prompt. 
+
+I made the prompt mainly via chatting with Claude Opus and using the [metaprompt notebook](https://colab.research.google.com/drive/1SoAajN8CBYTl79VyTwxtxncfCWlHlyy9).
+
+The diagrams are rendered using [mermaid](https://mermaid.js.org/) and [markmap](https://markmap.js.org/)
 
 ## Features
 
-- **Personalized Recommendations**: Enter your favorite items (e.g., movies, books, songs) and get personalized recommendations in the form of a visually appealing Mermaid flowchart diagram.
-- **Markmap Visualizations**: Generate interactive and dynamic mindmaps based on your queries using the Markmap feature.
+- **Personalized Recommendations**: Enter your favorite items (e.g., movies, books, songs) and get personalized recommendations in the form of a visually appealing Mermaid flowchart diagram
+- **Markmap Visualizations**: Generate interactive and dynamic mindmaps based on your queries using the Markmap feature
 - **Flexible Input**: Combine different types of items (e.g., books and songs) to get cross-domain recommendations.
 - **Targeted Recommendations**: Specify the type of recommendations you're looking for (e.g., movies, restaurants) to get more focused results.
 - **Download Options**: Easily download the generated Mermaid diagrams and Markmap visualizations as high-quality images.
 
-## Live Demo
-
-Check out the live demo of Handpicked by Haiku for You at [https://handpicked-by-haiku-for-you.onrender.com/](https://handpicked-by-haiku-for-you.onrender.com/).
 
 ## Setup and Installation
 
@@ -44,6 +50,7 @@ Check out the live demo of Handpicked by Haiku for You at [https://handpicked-by
 
 5. Set the required environment variables:
    - `OPENROUTER_API_KEY`: Your OpenRouter API key.
+
 6. Run the Flask development server:
    ```
    flask run
@@ -66,10 +73,6 @@ To deploy the application using Gunicorn for a concurrent server:
    ```
 
 
-
-## Contributing
-
-Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
 
 ## License
 
