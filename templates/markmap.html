@@ -82,6 +82,11 @@
             width: 100%;
             height: 100%;
         }
+        
+        .para {
+            text-align: center;
+            justify-content: center;
+        }
 
     </style>
 </head>
@@ -120,6 +125,16 @@
                 </div>
             </div>
         </form>
+
+        {% if not markmap_code %}
+        <div class="text-center mt-4">
+            <img src="static/markmap.png" alt="Example Screenshot" class="img-fluid" style="max-width: 90%; height: 90%;">
+        </div>
+        <p class="para">Movie recommendations inspired by Haruki Murakami's novels like Norwegian Wood</p>
+        <p class="para">Now it's your turn!</p>
+        {% endif %}
+
+
         {% if markmap_code %}
         <div class="text-center mt-4 mb-4">
             <button id="downloadButton" class="btn btn-success btn-lg fs-4 px-4 py-2">Download</button>
